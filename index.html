@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bridge Micro Saving Group | Enterprise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #dbeafe;
+            --accent: #059669; --accent-light: #d1fae5;
+            --success: #10b981; --success-bg: #d1fae5;
+            --danger: #ef4444; --danger-bg: #fee2e2;
+            --warning: #f59e0b; --warning-bg: #fef3c7;
+            --bg: #f8fafc; --surface: rgba(255, 255, 255, 0.95); --surface-hover: #f1f5f9;
+            --text: #0f172a; --text-secondary: #475569; --text-muted: #64748b;
+            --border: rgba(226, 232, 240, 0.8);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 20px 40px -10px rgba(37, 99, 235, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+        }
+        [data-theme="dark"] {
+            --bg: #020617; --surface: rgba(15, 23, 42, 0.95); --surface-hover: #1e293b;
+            --text: #f8fafc; --text-secondary: #cbd5e1; --text-muted: #64748b;
+            --border: rgba(30, 41, 59, 0.8); --primary-light: #1e3a8a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease, border-color 0.2s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; -webkit-tap-highlight-color: transparent; display: flex; flex-direction: column; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; opacity: 0.5; }
+
+        #globalFooter { text-align: center; padding: 1.25rem; color: var(--text-muted); font-size: 0.8rem; background: var(--surface); border-top: 1px solid var(--border); margin-top: auto; position: relative; z-index: 10; }
+        #globalFooter .uma-tech { font-weight: 700; color: var(--primary); letter-spacing: 0.5px; }
+
+        #loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; overflow: hidden; }
+        #loginScreen::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%); }
+        .login-container { display: flex; width: 90%; max-width: 1000px; min-height: 600px; background: var(--surface); backdrop-filter: blur(24px); border-radius: 24px; overflow: hidden; box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.1); position: relative; z-index: 2; }
+        .login-brand { flex: 1; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color: white; padding: 4rem; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+        .login-brand::before { content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); animation: pulse 8s infinite alternate; }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+        .brand-content { position: relative; z-index: 2; }
+        .brand-logo { width: 64px; height: 64px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.2); }
+        .brand-content h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.5px; }
+        .brand-content p { font-size: 1.05rem; opacity: 0.85; line-height: 1.6; margin-bottom: 2.5rem; }
+        .brand-features { display: flex; flex-direction: column; gap: 1.25rem; }
+        .feature { display: flex; align-items: center; gap: 1rem; font-size: 0.95rem; font-weight: 500; }
+        .feature i { width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        
+        .login-form-side { flex: 1; padding: 4rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--surface); }
+        .login-box { width: 100%; max-width: 380px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .login-icon-wrap { text-align: center; margin-bottom: 1.5rem; }
+        .login-icon-wrap i { font-size: 2.5rem; color: var(--primary); background: var(--primary-light); padding: 1.25rem; border-radius: 50%; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.15); }
+        .login-box h2 { font-size: 1.8rem; font-weight: 800; color: var(--text); margin-bottom: 0.5rem; letter-spacing: -0.5px; text-align: center; }
+        .login-box > p { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; text-align: center; }
+        .login-box input { width: 100%; margin-bottom: 1.25rem; padding: 0.9rem 1.25rem; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.95rem; color: var(--text); font-weight: 500; }
+        .login-box input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); background: #ffffff; }
+        .login-box button { width: 100%; padding: 0.9rem; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
+        .login-box button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); }
+        .login-box button:active { transform: scale(0.98); }
+        .login-box button:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        #appContainer { display: none; flex-direction: column; flex: 1; }
+        header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        [data-theme="dark"] header { background: rgba(15, 23, 42, 0.85); }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text); cursor: pointer; padding: 0.5rem; margin-right: 0.5rem; }
+        .brand-wrap { display: flex; align-items: center; gap: 1rem; }
+        .logo-icon { height: 40px; width: 40px; background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .header-meta { color: var(--text-muted); font-size: 0.75rem; margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .role-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 4px; }
+        .role-badge.admin { background: var(--primary-light); color: var(--primary); }
+        .role-badge.treasurer { background: var(--accent-light); color: var(--accent); }
+        .role-badge.member { background: var(--surface-hover); color: var(--text-secondary); border: 1px solid var(--border); }
+        
+        .layout { display: flex; flex: 1; }
+        .sidebar { width: 260px; background: var(--surface); backdrop-filter: blur(12px); border-right: 1px solid var(--border); padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        .sidebar button { width: 100%; text-align: left; padding: 0.85rem 1.25rem; border: none; background: transparent; border-radius: 10px; cursor: pointer; color: var(--text-secondary); font-weight: 600; display: flex; align-items: center; gap: 0.85rem; font-size: 0.9rem; }
+        .sidebar button:hover { background: var(--surface-hover); color: var(--text); transform: translateX(4px); }
+        .sidebar button.active { background: linear-gradient(90deg, var(--primary-light) 0%, transparent 100%); color: var(--primary); border-left: 3px solid var(--primary); }
+        .sidebar button.danger { color: var(--danger); margin-top: auto; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.1); }
+        .sidebar button.danger:hover { background: var(--danger); color: white; transform: translateX(4px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+        
+        .content { flex: 1; padding: 2rem; overflow-y: auto; max-height: calc(100vh - 72px); }
+        .page { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .card { background: var(--surface); backdrop-filter: blur(12px); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow); position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); }
+        .card-premium { border-top: 3px solid var(--primary); }
+        .card-premium.gold { border-top-color: var(--accent); }
+        .card-icon { width: 48px; height: 48px; background: var(--primary-light); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1rem; }
+        .card-premium.gold .card-icon { background: var(--accent-light); color: var(--accent); }
+        .label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .value { font-size: 1.75rem; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
+        
+        .chart-container { background: var(--surface); backdrop-filter: blur(12px); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 2rem; height: 320px; box-shadow: var(--shadow); }
+        .panel { background: var(--surface); backdrop-filter: blur(12px); border-radius: 16px; border: 1px solid var(--border); padding: 1.75rem; margin-bottom: 2rem; box-shadow: var(--shadow); }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .panel-header h2 { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem; color: var(--text); }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; align-items: end; }
+        label { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
+        input, select { padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 10px; font-size: 0.9rem; width: 100%; background: var(--bg); color: var(--text); font-weight: 500; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+        select:disabled { background: var(--surface-hover); color: var(--text-muted); cursor: not-allowed; }
+        
+        button.primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: 700; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); }
+        button.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35); }
+        button.primary:active { transform: scale(0.98); }
+        button.primary:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+        button.secondary { background: var(--surface-hover); color: var(--text); border: 1px solid var(--border); padding: 0.7rem 1.25rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+        button.secondary:hover { background: var(--border); }
+        button.success-btn { background: var(--success); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); }
+        button.success-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
+        button.danger-btn { background: var(--danger); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3); }
+        button.danger-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
+        button.export-btn { background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); padding: 0.65rem 1.15rem; border-radius: 10px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+        button.export-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
+        .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 600px; }
+        th, td { padding: 1rem 1.25rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg); font-weight: 700; color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.8px; position: sticky; top: 0; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--surface-hover); }
+        
+        .status-pending { color: var(--warning); font-weight: 700; background: var(--warning-bg); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.7rem; }
+        .status-awaiting { color: var(--primary); font-weight: 700; background: var(--primary-light); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.7rem; }
+        .status-completed, .status-approved, .status-active { color: var(--success); font-weight: 700; background: var(--success-bg); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.7rem; }
+        .status-rejected, .status-cleared { color: var(--text-muted); font-weight: 700; background: var(--surface-hover); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.7rem; border: 1px solid var(--border); }
+
+        #toastContainer { position: fixed; bottom: 2rem; right: 2rem; z-index: 10000; display: flex; flex-direction: column; gap: 0.75rem; }
+        .toast { background: var(--surface); backdrop-filter: blur(12px); border-left: 4px solid var(--primary); padding: 1rem 1.5rem; border-radius: 12px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 0.85rem; animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); min-width: 300px; border: 1px solid var(--border); }
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 9998; }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+        .modal-box { background: var(--surface); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; width: 90%; max-width: 450px; box-shadow: var(--shadow-lg); text-align: center; border: 1px solid var(--border); }
+        .modal-box h3 { margin-bottom: 0.5rem; font-size: 1.35rem; font-weight: 700; }
+        .modal-box p { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .modal-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .receipt-box { text-align: left; background: #ffffff; color: #000000; padding: 1.25rem; border-radius: 8px; border: 1px dashed #000000; margin: 1.25rem 0; font-family: 'Courier New', Courier, monospace; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 0.6rem; font-size: 0.85rem; color: #333333; }
+        .receipt-total { border-top: 2px dashed #000000; padding-top: 0.85rem; margin-top: 0.85rem; font-weight: 800; font-size: 1.15rem; color: #000000; }
+        
+        .denial-box { text-align: left; background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(255,255,255,0) 100%); border: 1px solid rgba(239, 68, 68, 0.2); border-left: 4px solid var(--danger); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+        .denial-box .denial-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed rgba(239, 68, 68, 0.2); }
+        .denial-box .denial-row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem; color: var(--text-secondary); }
+        .denial-box .denial-reason { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed rgba(239, 68, 68, 0.2); font-size: 0.85rem; color: var(--text); line-height: 1.6; font-weight: 500; }
+
+        .loan-preview { background: linear-gradient(135deg, var(--primary-light) 0%, rgba(255,255,255,0) 100%); border: 1px solid var(--primary); border-radius: 10px; padding: 1rem; margin-top: 1rem; display: none; }
+        .loan-preview h4 { color: var(--primary); font-size: 0.8rem; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .loan-preview .preview-amount { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+        .password-strength { height: 4px; background: var(--border); border-radius: 2px; margin-top: 0.4rem; overflow: hidden; }
+        .password-strength-bar { height: 100%; width: 0%; transition: width 0.3s, background-color 0.3s; border-radius: 2px; }
+        
+        .theme-toggle { background: var(--surface-hover); border: 1px solid var(--border); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 1.1rem; }
+        .theme-toggle:hover { background: var(--border); color: var(--text); transform: rotate(15deg); }
+
+        .delete-btn { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 0.45rem 0.85rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3); transition: all 0.2s ease; }
+        .delete-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
+
+        .sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; backdrop-filter: blur(4px); }
+        .sidebar-backdrop.active { display: block; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #receiptModal, #receiptModal * { visibility: visible; }
+            #receiptModal { position: absolute; left: 0; top: 0; width: 80mm; background: white; color: black; box-shadow: none; border: none; padding: 0; margin: 0; }
+            .modal-actions { display: none !important; }
+            .receipt-box { border: 1px solid #000; color: #000; background: #fff; }
+            .receipt-row, .receipt-total { color: #000 !important; }
+        }
+
+        @media (max-width: 900px) {
+            .mobile-menu-btn { display: block; }
+            header { padding: 0.75rem 1rem; }
+            .brand-wrap h1 { font-size: 1.1rem; }
+            .header-meta { display: none; }
+            .sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; z-index: 1000; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 20px rgba(0,0,0,0.15); flex-direction: column; overflow-y: auto; padding-top: 1.5rem; border-right: 1px solid var(--border); border-bottom: none; background: var(--surface); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar button { white-space: normal; padding: 1rem 1.5rem; font-size: 1rem; min-width: auto; width: 100%; border-radius: 0; border-left: 4px solid transparent; }
+            .sidebar button.active { border-left: 4px solid var(--primary); background: var(--primary-light); }
+            .sidebar button:hover { transform: none; }
+            .content { padding: 1rem; max-height: calc(100vh - 60px); width: 100%; }
+            .panel { padding: 1.25rem; margin-bottom: 1.5rem; border-radius: 12px; }
+            .panel-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .panel-header h2 { font-size: 1.1rem; }
+            .dashboard { grid-template-columns: 1fr 1fr; gap: 1rem; }
+            .card { padding: 1.25rem; border-radius: 12px; }
+            .value { font-size: 1.3rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 1rem; }
+            input, select { font-size: 16px; padding: 0.85rem 1rem; }
+            button.primary, button.secondary, button.export-btn { width: 100%; justify-content: center; padding: 0.85rem; }
+            .table-container { margin: 0 -1.25rem; border-radius: 0; border-left: none; border-right: none; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            table { font-size: 0.85rem; min-width: 500px; }
+            th, td { padding: 0.8rem 1rem; }
+            .chart-container { padding: 1rem; height: 250px; margin-left: -1.25rem; margin-right: -1.25rem; width: calc(100% + 2.5rem); border-radius: 0; border-left: none; border-right: none; }
+            #toastContainer { bottom: 1rem; right: 1rem; left: 1rem; }
+            .toast { min-width: auto; padding: 1rem; font-size: 0.9rem; width: 100%; }
+            .modal-overlay { padding: 1rem; align-items: flex-start; padding-top: 3rem; overflow-y: auto; }
+            .modal-box { padding: 1.5rem; margin: 0; width: 100%; max-width: 100%; border-radius: 16px; }
+            .modal-actions { flex-direction: column; }
+            .modal-actions button { width: 100%; padding: 0.85rem !important; }
+            .login-container { flex-direction: column; min-height: auto; width: 95%; border-radius: 20px; } 
+            .login-brand { display: none; } 
+            .login-form-side { padding: 2rem 1.5rem; width: 100%; }
+            .login-box h2 { font-size: 1.5rem; }
+        }
+        @media (max-width: 480px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .value { font-size: 1.25rem; }
+            .card-icon { width: 40px; height: 40px; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loginScreen">
+        <div class="login-container">
+            <div class="login-brand">
+                <div class="brand-content">
+                    <div class="brand-logo"><i class="fas fa-landmark"></i></div>
+                    <h1>Bridge Micro Saving Group</h1>
+                    <p>Empowering your financial future with secure, transparent, and premium micro-saving solutions.</p>
+                    <div class="brand-features">
+                        <div class="feature"><i class="fas fa-shield-alt"></i> Bank-grade Security</div>
+                        <div class="feature"><i class="fas fa-chart-line"></i> Real-time Analytics</div>
+                        <div class="feature"><i class="fas fa-users"></i> Community Driven</div>
+                    </div>
+                </div>
+            </div>
+            <div class="login-form-side">
+                <div class="login-box">
+                    <div class="login-icon-wrap"><i class="fas fa-user-tie"></i></div>
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to access your secure dashboard</p>
+                    <form id="loginForm">
+                        <input type="text" id="loginUsername" placeholder="Username" required autocomplete="off">
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                        <button type="submit"><i class="fas fa-fingerprint"></i> Secure Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="appContainer">
+        <header>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+            <div class="brand-wrap">
+                <div class="logo-icon"><i class="fas fa-landmark" style="font-size: 1rem;"></i></div>
+                <div>
+                    <h1 style="font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px;">Bridge Micro Saving</h1>
+                    <div class="header-meta">Enterprise Operations</div>
+                </div>
+            </div>
+            <div class="user-actions" style="display: flex; align-items: center; gap: 1rem;">
+                <button class="theme-toggle" id="themeToggle" title="Toggle Theme"><i class="fas fa-moon"></i></button>
+                <div style="text-align: right; display: none;" class="desktop-user-info">
+                    <div id="currentUserDisplay" style="font-weight: 700; font-size: 0.9rem;"></div>
+                </div>
+                <button id="logoutButton" class="secondary" title="Logout" style="padding: 0.5rem 0.8rem;"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </header>
+
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+        <div class="layout">
+            <aside class="sidebar" id="appSidebar">
+                <nav>
+                    <button class="active" data-page="page-dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+                    <button data-page="page-directory"><i class="fas fa-address-book"></i> Member Directory</button>
+                    <button data-page="page-member" class="admin-only"><i class="fas fa-users-cog"></i> Manage Users</button>
+                    <button data-page="page-savings"><i class="fas fa-wallet"></i> Savings</button>
+                    <button data-page="page-withdrawals"><i class="fas fa-clipboard-check"></i> Withdrawals</button>
+                    <button data-page="page-loans"><i class="fas fa-hand-holding-usd"></i> Loans</button>
+                    <button data-page="page-repayments" class="admin-only treasurer-only"><i class="fas fa-sync-alt"></i> Repayments</button>
+                    <button data-page="page-logs" class="admin-only"><i class="fas fa-shield-alt"></i> Audit Logs</button>
+                    <button data-page="page-profile"><i class="fas fa-user-cog"></i> Account Settings</button>
+                    <button class="danger admin-only" id="resetData"><i class="fas fa-trash-alt"></i> Reset System</button>
+                </nav>
+            </aside>
+
+            <main class="content">
+                <section id="page-dashboard" class="page active">
+                    <h2 id="dashboardTitle" style="margin-bottom: 1.5rem; font-weight: 800; letter-spacing: -0.5px;">System Overview</h2>
+                    <div class="dashboard" id="dashboardCards"></div>
+                    <div class="chart-container admin-only treasurer-only"><canvas id="financeChart"></canvas></div>
+                    <div class="chart-container" id="memberChartContainer" style="display: none;"><canvas id="memberFinanceChart"></canvas></div>
+                </section>
+
+                <section id="page-directory" class="page">
+                    <div class="panel">
+                        <div class="panel-header"><h2><i class="fas fa-address-book" style="color: var(--primary);"></i> Member Directory</h2></div>
+                        <div class="table-container"><table><thead id="directoryTableHead"></thead><tbody id="directoryTableBody"></tbody></table></div>
+                    </div>
+                </section>
+
+                <section id="page-member" class="page admin-only">
+                    <div class="panel">
+                        <h2><i class="fas fa-user-plus" style="color: var(--primary);"></i> Register New User & Member</h2>
+                        <form id="memberForm" class="form-grid" style="margin-top: 1.5rem;">
+                            <label>Username <input id="newUsername" type="text" placeholder="johndoe" required></label>
+                            <label>Password <input id="newPassword" type="password" placeholder="Min 6 chars" minlength="6" required></label>
+                            <label>Role <select id="newUserRole" required><option value="member">Member</option><option value="treasurer">Treasurer</option><option value="admin">Admin</option></select></label>
+                            <label>Full Name <input id="memberName" type="text" placeholder="John Doe" required></label>
+                            <label>Phone Number <input id="memberPhone" type="text" placeholder="0771234567" required></label>
+                            <label>Initial Share Capital (UGX) <input id="memberShare" type="number" min="10000" step="1000" value="50000" required></label>
+                            <button type="submit" class="primary"><i class="fas fa-save"></i> Create Account</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="page-savings" class="page">
+                    <div class="panel">
+                        <h2><i class="fas fa-exchange-alt" style="color: var(--primary);"></i> Record Transaction</h2>
+                        <form id="savingsForm" class="form-grid" style="margin-top: 1.5rem;">
+                            <label>Member <select id="savingsMember" required></select></label>
+                            <label>Type <select id="transactionType" required></select></label>
+                            <label>Amount (UGX) <input id="transactionAmount" type="number" min="1000" step="1000" required></label>
+                            <label>Note <input id="transactionNote" type="text" placeholder="e.g., Monthly savings"></label>
+                            <button type="submit" class="primary" id="savingsSubmitBtn"><i class="fas fa-check-circle"></i> Submit Transaction</button>
+                        </form>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><h2>Transaction History</h2><button class="export-btn" onclick="exportToCSV('transactions')"><i class="fas fa-file-csv"></i> Export CSV</button></div>
+                        <div class="table-container"><table><thead><tr><th>Date</th><th>Member</th><th>Type</th><th>Amount (UGX)</th><th>Note</th><th>Receipt</th></tr></thead><tbody id="savingsTableBody"></tbody></table></div>
+                    </div>
+                </section>
+
+                <section id="page-withdrawals" class="page">
+                    <div class="panel">
+                        <div class="panel-header"><h2><i class="fas fa-clipboard-check" style="color: var(--warning);"></i> <span id="withdrawalsTitle">Withdrawal Requests</span></h2></div>
+                        <div class="table-container"><table><thead><tr><th>Request ID</th><th>Date</th><th>Member</th><th>Amount (UGX)</th><th>Note</th><th>Status</th><th>Action</th></tr></thead><tbody id="withdrawalTableBody"></tbody></table></div>
+                    </div>
+                </section>
+
+                <section id="page-loans" class="page">
+                    <div class="panel">
+                        <h2><i class="fas fa-file-invoice-dollar" style="color: var(--success);"></i> Loan Request</h2>
+                        <form id="loanForm" class="form-grid" style="margin-top: 1.5rem;">
+                            <label>Member <select id="loanMember" required></select></label>
+                            <label>Amount (UGX) <input id="loanAmount" type="number" min="10000" step="1000" required></label>
+                            <label>Interest Rate (%) <input id="loanRate" type="number" min="1" max="50" value="12" required></label>
+                            <label>Term (Months) <input id="loanTerm" type="number" min="1" max="36" value="12" required></label>
+                            <button type="submit" class="primary"><i class="fas fa-paper-plane"></i> Request Loan</button>
+                        </form>
+                        <div id="loanEligibilityPreview" class="loan-preview"></div>
+                        <div id="loanPreview" class="loan-preview" style="margin-top: 0.5rem;">
+                            <h4><i class="fas fa-calculator"></i> Estimated Repayment Preview</h4>
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;"><span style="color: var(--text-secondary); font-size: 0.85rem;">Monthly Installment:</span><span class="preview-amount" id="previewMonthly">UGX 0</span></div>
+                            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 0.5rem;"><span style="color: var(--text-secondary); font-size: 0.85rem;">Total Repayment:</span><span style="font-weight: 700; color: var(--text);" id="previewTotal">UGX 0</span></div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><h2>Loan Portfolio</h2></div>
+                        <div class="table-container"><table><thead><tr><th>Loan ID</th><th>Member</th><th>Principal</th><th>Rate</th><th>Term</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead><tbody id="loanTableBody"></tbody></table></div>
+                    </div>
+                </section>
+
+                <section id="page-repayments" class="page admin-only treasurer-only">
+                    <div class="panel">
+                        <h2><i class="fas fa-money-bill-wave" style="color: var(--success);"></i> Process Loan Repayment</h2>
+                        <form id="repaymentForm" class="form-grid" style="margin-top: 1.5rem;">
+                            <label>Select Active Loan <select id="repaymentLoan" required></select></label>
+                            <label>Repayment Amount (UGX) <input id="repaymentAmount" type="number" min="1000" step="1000" required></label>
+                            <button type="submit" class="primary"><i class="fas fa-check-circle"></i> Submit Repayment</button>
+                        </form>
+                    </div>
+                </section>
+
+                <section id="page-logs" class="page admin-only">
+                    <div class="panel">
+                        <div class="panel-header"><h2><i class="fas fa-shield-alt" style="color: var(--primary);"></i> System Audit Logs</h2></div>
+                        <div class="table-container"><table><thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody id="logsTableBody"></tbody></table></div>
+                    </div>
+                </section>
+
+                <section id="page-profile" class="page">
+                    <div class="panel" style="max-width: 700px;">
+                        <h2><i class="fas fa-user-cog" style="color: var(--primary);"></i> Account Settings</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Update your personal information and login credentials.</p>
+                        <form id="profileForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                            <h3 style="font-size: 1.05rem; color: var(--text); margin-bottom: 0.5rem;">Personal Information</h3>
+                            <div class="form-grid"><label>Full Name <input id="profileName" type="text" required></label><label>Phone Number <input id="profilePhone" type="text" required></label></div>
+                            <div style="height: 1px; background: var(--border); margin: 1rem 0;"></div>
+                            <h3 style="font-size: 1.05rem; color: var(--text); margin-bottom: 0.5rem;">Login Credentials</h3>
+                            <label>Username <input id="profileNewUsername" type="text" required></label>
+                            <label>Current Password (Required to save changes) <input id="profileCurrentPwd" type="password" placeholder="Enter current password" required></label>
+                            <div class="form-grid">
+                                <label>New Password (Leave blank to keep current) <input id="profileNewPwd" type="password" placeholder="Min 6 characters" minlength="6"><div class="password-strength"><div class="password-strength-bar" id="pwdStrengthBar"></div></div></label>
+                                <label>Confirm New Password <input id="profileConfirmPwd" type="password" placeholder="Re-enter new password"></label>
+                            </div>
+                            <button type="submit" class="primary" style="margin-top: 1rem; justify-content: center; align-self: flex-start;"><i class="fas fa-save"></i> Save Changes</button>
+                        </form>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <footer id="globalFooter">
+        <p class="uma-tech">Product of Uma-Tech Solutions</p>
+        <p style="font-size: 0.75rem; margin-top: 0.5rem;">© 2026 Bridge Micro Saving Group. All rights reserved.</p>
+    </footer>
+
+    <div id="toastContainer"></div>
+    
+    <div id="loanDenialModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 480px; border-top: 4px solid var(--danger);">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger); margin-bottom: 1rem;"></i>
+            <h3 style="color: var(--danger); margin-bottom: 0.5rem;">Loan Request Declined</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">This loan request cannot be processed at this time.</p>
+            <div class="denial-box">
+                <div class="denial-header"><span style="font-weight: 700; color: var(--text); font-size: 1rem;">Eligibility Check</span><span style="font-size: 0.75rem; font-weight: 700; color: var(--danger); background: var(--danger-bg); padding: 0.2rem 0.6rem; border-radius: 12px;">FAILED</span></div>
+                <div class="denial-row"><span>Member Name:</span><span id="denialMemberName" style="font-weight: 600; color: var(--text);"></span></div>
+                <div class="denial-row"><span>Current Total Equity:</span><span id="denialCurrentEquity" style="font-weight: 700; color: var(--danger);"></span></div>
+                <div class="denial-row"><span>Minimum Required Equity:</span><span style="font-weight: 700; color: var(--success);">UGX 50,000</span></div>
+                <div class="denial-reason"><strong style="color: var(--danger);">Reason for Decline:</strong><br><span id="denialReasonText">Your total equity is below the minimum threshold of UGX 50,000 required to qualify for a loan.</span></div>
+            </div>
+            <div class="modal-actions" style="margin-top: 1.5rem;"><button class="primary" onclick="closeLoanDenialModal()" style="width: 100%; justify-content: center; background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);"><i class="fas fa-check"></i> Understood</button></div>
+        </div>
+    </div>
+
+    <div id="credentialsModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 420px;">
+            <i class="fas fa-key" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
+            <h3>Account Created Successfully</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 0.9rem;">Please save these credentials securely.</p>
+            <div class="receipt-box">
+                <div class="receipt-row"><span>Username:</span> <span id="credUsername" style="font-weight: 700; color: #000;"></span></div>
+                <div class="receipt-row"><span>Password:</span> <span id="credPassword" style="font-weight: 700; color: #000;"></span></div>
+                <div class="receipt-row"><span>Member:</span> <span id="credName" style="font-weight: 600; color: #000;"></span></div>
+            </div>
+            <div class="modal-actions">
+                <button class="secondary" onclick="closeCredentialsModal()">Close</button>
+                <button class="primary" onclick="copyCredentials()"><i class="fas fa-copy"></i> Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal-box">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2.5rem; color: var(--warning); margin-bottom: 1rem;"></i>
+            <h3 id="confirmTitle">Are you sure?</h3>
+            <p id="confirmMessage">This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="secondary" onclick="closeConfirm()">Cancel</button>
+                <button class="danger-btn" id="confirmYesBtn" style="padding: 0.65rem 1.5rem;">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="receiptModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 400px;">
+            <i class="fas fa-check-circle" style="font-size: 2.5rem; color: var(--success); margin-bottom: 1rem;"></i>
+            <h3>Transaction Successful</h3>
+            <div class="receipt-box" id="receiptContent"></div>
+            <div class="modal-actions">
+                <button class="secondary" onclick="downloadReceipt()"><i class="fas fa-download"></i> Download</button>
+                <button class="primary" onclick="printReceipt()"><i class="fas fa-print"></i> Print POS</button>
+                <button class="secondary" onclick="closeReceipt()" style="width: 100%; margin-top: 0.5rem;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pinModal" class="modal-overlay">
+        <div class="modal-box">
+            <i class="fas fa-lock" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
+            <h3>Security PIN Required</h3>
+            <p>Enter admin PIN to confirm system reset</p>
+            <input type="password" id="resetPin" placeholder="Enter PIN: 9999" style="margin: 1rem 0; text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem;">
+            <div class="modal-actions">
+                <button class="secondary" onclick="closePinModal()">Cancel</button>
+                <button class="danger-btn" onclick="confirmResetWithPin()" style="padding: 0.65rem 1.5rem;">Reset System</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://bridge-backend-2-ycom.onrender.com/api'; // UPDATE THIS TO YOUR RENDER URL
+        let currentReceiptData = null;
+
+        const Utils = {
+            formatCurrency: (amount) => `UGX ${parseFloat(amount).toLocaleString('en-UG')}`,
+            formatDate: (dateStr) => new Date(dateStr).toLocaleDateString('en-UG', { year: 'numeric', month: 'short', day: 'numeric' }),
+            toast: (message, type = 'success') => {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                const icon = type === 'success' ? 'check-circle' : (type === 'error' ? 'times-circle' : 'exclamation-circle');
+                const color = type === 'success' ? 'var(--success)' : (type === 'error' ? 'var(--danger)' : 'var(--warning)');
+                toast.innerHTML = `<i class="fas fa-${icon}" style="color: ${color}; font-size: 1.2rem;"></i> <span style="font-weight: 500;">${message}</span>`;
+                container.appendChild(toast);
+                setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(100%)'; setTimeout(() => toast.remove(), 300); }, 4000);
+            },
+            confirm: (message, title = 'Confirm Action') => {
+                return new Promise((resolve) => {
+                    document.getElementById('confirmTitle').textContent = title;
+                    document.getElementById('confirmMessage').innerHTML = message;
+                    document.getElementById('confirmModal').classList.add('active');
+                    const yesBtn = document.getElementById('confirmYesBtn');
+                    const cleanup = () => { document.getElementById('confirmModal').classList.remove('active'); yesBtn.onclick = null; };
+                    yesBtn.onclick = () => { cleanup(); resolve(true); };
+                    document.getElementById('confirmModal').onclick = (e) => { if (e.target.id === 'confirmModal') { cleanup(); resolve(false); } };
+                });
+            }
+        };
+
+        let state = { users: [], members: [], transactions: [], loans: [], withdrawalRequests: [], logs: [], currentUser: null, theme: 'light' };
+        let financeChart = null, memberFinanceChart = null;
+
+        // FIXED: Setup forms and navigation ONCE on load, not on every login
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme(); setupLogin(); setupMobileMenu(); setupForms(); setupNavigation();
+        });
+
+        async function fetchData() {
+            try {
+                const res = await fetch(`${API_URL}/data`);
+                const data = await res.json();
+                state = { ...state, ...data };
+                renderAll();
+            } catch (err) { console.error("Failed to fetch data", err); }
+        }
+
+        function setupLogin() {
+            // FIXED: Changed to .onsubmit to prevent stacking event listeners
+            document.getElementById('loginForm').onsubmit = async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                if (btn.disabled) return; // Prevent double clicks
+                
+                btn.disabled = true;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+                
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                try {
+                    const res = await fetch(`${API_URL}/login`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        state.currentUser = data.user;
+                        document.getElementById('loginScreen').style.display = 'none';
+                        document.getElementById('appContainer').style.display = 'flex';
+                        updateHeaderDisplay(); applyRoleBasedUI(); 
+                        await fetchData();
+                        setTimeout(() => {
+                            renderDashboard();
+                            if (state.currentUser.role !== 'member') renderChart(); else renderMemberChart();
+                        }, 200);
+                        Utils.toast(`Welcome back, ${data.user.name}!`, 'success');
+                    } else { Utils.toast('Invalid username or password.', 'error'); }
+                } catch (err) { Utils.toast('Connection error. Is the backend running?', 'error'); }
+                finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            };
+
+            document.getElementById('logoutButton').onclick = () => {
+                state.currentUser = null;
+                document.getElementById('appContainer').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('loginForm').reset();
+            };
+
+            document.getElementById('themeToggle').onclick = () => {
+                state.theme = state.theme === 'light' ? 'dark' : 'light';
+                applyTheme();
+            };
+
+            document.getElementById('resetData').onclick = () => {
+                document.getElementById('pinModal').classList.add('active');
+            };
+        }
+
+        function closePinModal() {
+            document.getElementById('pinModal').classList.remove('active');
+            document.getElementById('resetPin').value = '';
+        }
+
+        async function confirmResetWithPin() {
+            const pin = document.getElementById('resetPin').value;
+            if (pin !== '9999') { Utils.toast('Incorrect Security PIN!', 'error'); document.getElementById('resetPin').value = ''; return; }
+            const confirmed = await Utils.confirm('⚠️ This will permanently wipe ALL transactions, loans, and withdrawal requests.<br><br><strong>All user accounts will be preserved.</strong>', 'Smart System Reset');
+            if (confirmed) {
+                try {
+                    const res = await fetch(`${API_URL}/reset`, { method: 'POST' });
+                    if (!res.ok) throw new Error('Reset failed');
+                    Utils.toast('System data reset successfully. Accounts preserved.', 'success');
+                    closePinModal();
+                    setTimeout(() => location.reload(), 1500);
+                } catch (err) { Utils.toast('Failed to reset system.', 'error'); }
+            }
+        }
+
+        function updateHeaderDisplay() {
+            const user = state.currentUser;
+            let badgeClass = user.role === 'admin' ? 'admin' : (user.role === 'treasurer' ? 'treasurer' : 'member');
+            document.getElementById('currentUserDisplay').innerHTML = `${user.name} <span class="role-badge ${badgeClass}"><i class="fas fa-circle" style="font-size: 6px;"></i> ${user.role}</span>`;
+        }
+
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', state.theme);
+            document.querySelector('#themeToggle i').className = state.theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        function applyRoleBasedUI() {
+            const role = state.currentUser.role;
+            const isAdmin = role === 'admin';
+            const isPrivileged = isAdmin || role === 'treasurer';
+            document.querySelectorAll('.admin-only').forEach(el => el.style.display = isAdmin ? '' : 'none');
+            document.querySelectorAll('.treasurer-only').forEach(el => el.style.display = isPrivileged ? '' : 'none');
+
+            const myMember = state.members.find(m => m.id === state.currentUser.memberId);
+            if (role === 'member' && myMember) {
+                document.getElementById('dashboardTitle').textContent = 'My Financial Overview';
+                const savingsSelect = document.getElementById('savingsMember');
+                if (savingsSelect) { savingsSelect.innerHTML = `<option value="${myMember.id}">${myMember.name} (You)</option>`; savingsSelect.value = myMember.id; savingsSelect.disabled = true; }
+                const loanSelect = document.getElementById('loanMember');
+                if (loanSelect) { loanSelect.innerHTML = `<option value="${myMember.id}">${myMember.name} (You)</option>`; loanSelect.value = myMember.id; loanSelect.disabled = true; }
+                document.getElementById('memberChartContainer').style.display = 'block';
+                document.getElementById('transactionType').innerHTML = `<option value="Withdraw">Request Withdrawal (Requires Approval)</option>`;
+                document.getElementById('withdrawalsTitle').textContent = 'My Withdrawal Requests';
+            } else {
+                document.getElementById('dashboardTitle').textContent = (isAdmin ? 'System Overview' : 'Treasurer Dashboard');
+                document.getElementById('memberChartContainer').style.display = 'none';
+                document.getElementById('transactionType').innerHTML = `<option value="Deposit">Deposit</option><option value="Withdraw">Withdraw (Instant)</option>`;
+                document.getElementById('withdrawalsTitle').textContent = 'All Withdrawal Requests';
+                const savingsSelect = document.getElementById('savingsMember');
+                if (savingsSelect) savingsSelect.disabled = false;
+                const loanSelect = document.getElementById('loanMember');
+                if (loanSelect) loanSelect.disabled = false;
+            }
+        }
+
+        function setupNavigation() {
+            // FIXED: Changed to .onclick to prevent stacking
+            document.querySelectorAll('.sidebar button[data-page]').forEach(btn => {
+                btn.onclick = async () => {
+                    document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    document.getElementById(btn.dataset.page).classList.add('active');
+                    await fetchData();
+                    if (btn.dataset.page === 'page-dashboard') {
+                        setTimeout(() => { if (state.currentUser.role !== 'member') renderChart(); else renderMemberChart(); }, 100);
+                    }
+                    if (window.innerWidth <= 900) {
+                        document.getElementById('appSidebar').classList.remove('open');
+                        document.getElementById('sidebarBackdrop').classList.remove('active');
+                    }
+                };
+            });
+        }
+
+        function setupForms() {
+            const role = state.currentUser ? state.currentUser.role : 'member';
+            const isAdmin = role === 'admin';
+
+            document.getElementById('transactionType').onchange = function() {
+                const btn = document.getElementById('savingsSubmitBtn');
+                btn.innerHTML = (this.value === 'Withdraw' && role === 'member') ? '<i class="fas fa-paper-plane"></i> Submit Withdrawal Request' : '<i class="fas fa-check-circle"></i> Submit Transaction';
+            };
+
+            if (isAdmin) {
+                // FIXED: .onsubmit prevents stacking, btn.disabled prevents double-clicks
+                document.getElementById('memberForm').onsubmit = async (e) => {
+                    e.preventDefault();
+                    const btn = e.target.querySelector('button');
+                    if (btn.disabled) return;
+                    btn.disabled = true;
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+
+                    try {
+                        const username = document.getElementById('newUsername').value;
+                        const password = document.getElementById('newPassword').value;
+                        const userRole = document.getElementById('newUserRole').value;
+                        if (state.users.find(u => u.username === username)) { Utils.toast('Username already exists!', 'error'); return; }
+                        
+                        const newMemberId = 'M' + String(state.members.length + 1).padStart(3, '0');
+                        const newUserId = 'U' + String(state.users.length + 1).padStart(3, '0');
+                        const name = document.getElementById('memberName').value;
+                        const phone = document.getElementById('memberPhone').value;
+                        const share = parseFloat(document.getElementById('memberShare').value);
+
+                        const payload = {
+                            user: { id: newUserId, username, password, role: userRole, memberId: newMemberId, name },
+                            member: { id: newMemberId, name, phone, share, savings: 0, joined: new Date().toISOString().split('T')[0] },
+                            transaction: { id: 'T' + String(state.transactions.length + 1).padStart(3, '0'), date: new Date().toISOString().split('T')[0], memberId: newMemberId, member: name, type: 'Share Capital', amount: share, note: 'Initial registration' },
+                            actorName: state.currentUser.name
+                        };
+
+                        const res = await fetch(`${API_URL}/members`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                        if (!res.ok) throw new Error('Failed to create');
+                        e.target.reset(); 
+                        await fetchData();
+                        showCredentialsModal(username, password, name);
+                        Utils.toast(`User & Member ${name} created successfully!`, 'success');
+                    } catch (err) { Utils.toast('Failed to create user.', 'error'); }
+                    finally {
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
+                };
+            }
+
+            document.getElementById('savingsForm').onsubmit = async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                if (btn.disabled) return;
+                btn.disabled = true;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                try {
+                    const memberId = (isAdmin || role === 'treasurer') ? document.getElementById('savingsMember').value : state.currentUser.memberId;
+                    if (!memberId) { Utils.toast('Please select a member.', 'error'); return; }
+                    const type = document.getElementById('transactionType').value;
+                    const amount = parseFloat(document.getElementById('transactionAmount').value);
+                    const note = document.getElementById('transactionNote').value || '-';
+                    const member = state.members.find(m => m.id === memberId);
+
+                    if (type === 'Deposit') {
+                        await fetch(`${API_URL}/transactions`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ memberId, type, amount, note, actorName: state.currentUser.name }) });
+                        document.getElementById('transactionAmount').value = '';
+                        document.getElementById('transactionNote').value = '';
+                        await fetchData();
+                        showReceipt({ id: 'NEW', date: new Date().toISOString().split('T')[0], member: member.name, type: 'Deposit', amount, note });
+                        Utils.toast(`Deposit recorded!`, 'success');
+                    } else {
+                        if (member.savings < amount) { Utils.toast('Insufficient balance.', 'error'); return; }
+                        if (role === 'member') {
+                            await fetch(`${API_URL}/withdrawals`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ memberId, memberName: member.name, amount, note, status: 'Pending', actorName: state.currentUser.name }) });
+                            document.getElementById('transactionAmount').value = '';
+                            document.getElementById('transactionNote').value = '';
+                            await fetchData();
+                            Utils.toast(`Withdrawal request submitted!`, 'warning');
+                        } else {
+                            if (await Utils.confirm(`Process instant withdrawal of ${Utils.formatCurrency(amount)}?`)) {
+                                await fetch(`${API_URL}/transactions`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ memberId, type: 'Withdraw', amount, note: note + ' (Instant)', actorName: state.currentUser.name }) });
+                                document.getElementById('transactionAmount').value = '';
+                                document.getElementById('transactionNote').value = '';
+                                await fetchData();
+                                showReceipt({ id: 'NEW', date: new Date().toISOString().split('T')[0], member: member.name, type: 'Withdraw', amount, note });
+                                Utils.toast(`Instant withdrawal processed.`, 'success');
+                            }
+                        }
+                    }
+                } catch (err) { Utils.toast('Transaction failed.', 'error'); }
+                finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            };
+
+            ['loanAmount', 'loanRate', 'loanTerm'].forEach(id => {
+                document.getElementById(id).oninput = () => {
+                    const amount = parseFloat(document.getElementById('loanAmount').value) || 0;
+                    const rate = parseFloat(document.getElementById('loanRate').value) || 0;
+                    const term = parseInt(document.getElementById('loanTerm').value) || 0;
+                    if (amount > 0 && rate > 0 && term > 0) {
+                        const total = amount + (amount * (rate / 100) * (term / 12));
+                        document.getElementById('previewMonthly').textContent = Utils.formatCurrency(total / term);
+                        document.getElementById('previewTotal').textContent = Utils.formatCurrency(total);
+                        document.getElementById('loanPreview').style.display = 'block';
+                    } else { document.getElementById('loanPreview').style.display = 'none'; }
+                };
+            });
+
+            const loanMemberSelect = document.getElementById('loanMember');
+            if (loanMemberSelect) {
+                loanMemberSelect.onchange = function() {
+                    const memberId = this.value;
+                    const member = state.members.find(m => m.id === memberId);
+                    const previewEl = document.getElementById('loanEligibilityPreview');
+                    if (member) {
+                        const totalEquity = member.savings + member.share;
+                        const isEligible = totalEquity >= 50000;
+                        const color = isEligible ? 'var(--success)' : 'var(--danger)';
+                        const icon = isEligible ? 'fa-check-circle' : 'fa-times-circle';
+                        const status = isEligible ? 'Eligible for Loan' : 'Not Eligible (Min. UGX 50,000 Total Equity Required)';
+                        previewEl.innerHTML = `<h4><i class="fas ${icon}" style="color: ${color};"></i> Member Equity Status</h4>
+                                               <div style="display: flex; justify-content: space-between; align-items: baseline;"><span style="color: var(--text-secondary); font-size: 0.85rem;">Total Equity:</span><span style="font-weight: 800; color: ${color}; font-size: 1.1rem;">${Utils.formatCurrency(totalEquity)}</span></div>
+                                               <div style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600; color: ${color};">${status}</div>`;
+                        previewEl.style.display = 'block';
+                        previewEl.style.borderColor = color;
+                        previewEl.style.background = isEligible ? 'var(--success-bg)' : 'var(--danger-bg)';
+                    } else { previewEl.style.display = 'none'; }
+                };
+            }
+
+            document.getElementById('loanForm').onsubmit = async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                if (btn.disabled) return;
+                btn.disabled = true;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Requesting...';
+
+                try {
+                    const memberId = (isAdmin || role === 'treasurer') ? document.getElementById('loanMember').value : state.currentUser.memberId;
+                    const amount = parseFloat(document.getElementById('loanAmount').value);
+                    const rate = parseFloat(document.getElementById('loanRate').value);
+                    const term = parseInt(document.getElementById('loanTerm').value);
+                    const member = state.members.find(m => m.id === memberId);
+                    if (!member) { Utils.toast('Please select a valid member.', 'error'); return; }
+
+                    const totalEquity = member.savings + member.share;
+                    if (totalEquity < 50000) { showLoanDenialModal(member.name, totalEquity); return; }
+                    if (amount > totalEquity * 3) { showLoanDenialModal(member.name, totalEquity, `The requested loan amount of ${Utils.formatCurrency(amount)} exceeds the maximum allowed limit of 3x your total equity (${Utils.formatCurrency(totalEquity * 3)}).`); return; }
+
+                    const totalRepayment = amount + (amount * (rate / 100) * (term / 12));
+                    const res = await fetch(`${API_URL}/loans`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ memberId, memberName: member.name, amount, rate, term, balance: totalRepayment, originalBalance: totalRepayment, status: 'Pending', actorName: state.currentUser.name }) });
+                    const data = await res.json();
+                    if (!res.ok) { showLoanDenialModal(member.name, totalEquity, data.message || "The system could not process this loan request."); return; }
+
+                    document.getElementById('loanAmount').value = '';
+                    document.getElementById('loanRate').value = '12';
+                    document.getElementById('loanTerm').value = '12';
+                    document.getElementById('loanPreview').style.display = 'none';
+                    document.getElementById('loanEligibilityPreview').style.display = 'none';
+                    await fetchData(); 
+                    Utils.toast(`Loan requested successfully!`, 'success');
+                } catch (err) { Utils.toast('Network error. Please try again.', 'error'); }
+                finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            };
+
+            if (isAdmin || role === 'treasurer') {
+                document.getElementById('repaymentForm').onsubmit = async (e) => {
+                    e.preventDefault();
+                    const btn = e.target.querySelector('button');
+                    if (btn.disabled) return;
+                    btn.disabled = true;
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                    try {
+                        const loanId = document.getElementById('repaymentLoan').value;
+                        const amount = parseFloat(document.getElementById('repaymentAmount').value);
+                        const loan = state.loans.find(l => l.id === loanId);
+                        if (amount > loan.balance) { Utils.toast('Exceeds balance.', 'error'); return; }
+                        if (await Utils.confirm(`Process repayment of ${Utils.formatCurrency(amount)}?`)) {
+                            await fetch(`${API_URL}/loans/${loanId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount, actorName: state.currentUser.name }) });
+                            e.target.reset();
+                            await fetchData();
+                            showReceipt({ id: 'NEW', date: new Date().toISOString().split('T')[0], member: loan.memberName, type: 'Loan Repayment', amount, note: `Loan ${loanId}` });
+                            Utils.toast(`Repayment recorded!`, 'success');
+                        }
+                    } catch (err) { Utils.toast('Repayment failed.', 'error'); }
+                    finally {
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
+                };
+            }
+
+            const myMember = state.members.find(m => m.id === state.currentUser.memberId);
+            document.getElementById('profileName').value = state.currentUser.name;
+            document.getElementById('profilePhone').value = myMember ? myMember.phone : '';
+            document.getElementById('profileNewUsername').value = state.currentUser.username;
+
+            document.getElementById('profileNewPwd').oninput = function() {
+                const val = this.value; const bar = document.getElementById('pwdStrengthBar'); let strength = 0;
+                if (val.length >= 6) strength += 25; if (val.length >= 10) strength += 25;
+                if (/[A-Z]/.test(val)) strength += 25; if (/[0-9]/.test(val)) strength += 25;
+                bar.style.width = strength + '%';
+                bar.style.backgroundColor = strength < 50 ? 'var(--danger)' : (strength < 75 ? 'var(--warning)' : 'var(--success)');
+            };
+
+            document.getElementById('profileForm').onsubmit = async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                if (btn.disabled) return;
+                btn.disabled = true;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+                try {
+                    const currentPwd = document.getElementById('profileCurrentPwd').value;
+                    if (currentPwd !== state.currentUser.password) { Utils.toast('Current password is incorrect.', 'error'); return; }
+                    const newName = document.getElementById('profileName').value.trim();
+                    const newPhone = document.getElementById('profilePhone').value.trim();
+                    const newUsername = document.getElementById('profileNewUsername').value.trim();
+                    const newPwd = document.getElementById('profileNewPwd').value;
+                    const confirmPwd = document.getElementById('profileConfirmPwd').value;
+
+                    if (newPwd && newPwd !== confirmPwd) { Utils.toast('New passwords do not match.', 'error'); return; }
+                    if (state.users.find(u => u.username === newUsername && u.id !== state.currentUser.id)) { Utils.toast('Username is already taken.', 'error'); return; }
+
+                    if (await Utils.confirm('Save these changes to your profile?', 'Update Profile')) {
+                        const payload = { username: newUsername, name: newName, password: newPwd || undefined, phone: newPhone };
+                        if (state.currentUser.memberId) payload.memberId = state.currentUser.memberId;
+                        const res = await fetch(`${API_URL}/users/${state.currentUser.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                        if (!res.ok) throw new Error('Update failed');
+                        await fetchData();
+                        state.currentUser.username = newUsername; state.currentUser.name = newName;
+                        if (newPwd) state.currentUser.password = newPwd;
+                        updateHeaderDisplay();
+                        Utils.toast('Profile updated successfully!', 'success');
+                        document.getElementById('profileCurrentPwd').value = ''; document.getElementById('profileNewPwd').value = '';
+                        document.getElementById('profileConfirmPwd').value = ''; document.getElementById('pwdStrengthBar').style.width = '0%';
+                    }
+                } catch (err) { Utils.toast('Failed to update profile.', 'error'); }
+                finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            };
+        }
+
+        function renderAll() { renderDashboard(); renderTables(); populateDropdowns(); }
+
+        function renderDashboard() {
+            const role = state.currentUser.role;
+            const container = document.getElementById('dashboardCards');
+            if (role === 'admin' || role === 'treasurer') {
+                const totalEquity = state.members.reduce((sum, m) => sum + m.savings + m.share, 0);
+                const outstanding = state.loans.filter(l => l.status === 'Active').reduce((sum, l) => sum + l.balance, 0);
+                const pending = state.withdrawalRequests.filter(r => r.status === 'Pending').length;
+                container.innerHTML = `
+                    <div class="card card-premium"><div class="card-icon"><i class="fas fa-users"></i></div><div class="label">Total Members</div><div class="value">${state.members.length}</div></div>
+                    <div class="card card-premium gold"><div class="card-icon"><i class="fas fa-coins"></i></div><div class="label">Total System Equity</div><div class="value">${Utils.formatCurrency(totalEquity)}</div></div>
+                    <div class="card card-premium"><div class="card-icon"><i class="fas fa-hand-holding-usd"></i></div><div class="label">Outstanding Loans</div><div class="value">${Utils.formatCurrency(outstanding)}</div></div>
+                    <div class="card card-premium" style="border-top-color: var(--warning);"><div class="card-icon" style="color: var(--warning); background: var(--warning-bg);"><i class="fas fa-clock"></i></div><div class="label">Pending Withdrawals</div><div class="value">${pending}</div></div>
+                `;
+            } else {
+                const myMember = state.members.find(m => m.id === state.currentUser.memberId);
+                const totalEquity = myMember ? (myMember.savings + myMember.share) : 0;
+                container.innerHTML = `
+                    <div class="card card-premium"><div class="card-icon"><i class="fas fa-id-card"></i></div><div class="label">My Share Capital</div><div class="value">${Utils.formatCurrency(myMember ? myMember.share : 0)}</div></div>
+                    <div class="card card-premium gold"><div class="card-icon"><i class="fas fa-wallet"></i></div><div class="label">My Savings Balance</div><div class="value">${Utils.formatCurrency(myMember ? myMember.savings : 0)}</div></div>
+                    <div class="card card-premium"><div class="card-icon"><i class="fas fa-chart-line"></i></div><div class="label">My Total Equity</div><div class="value">${Utils.formatCurrency(totalEquity)}</div></div>
+                    <div class="card card-premium" style="border-top-color: var(--warning);"><div class="card-icon" style="color: var(--warning); background: var(--warning-bg);"><i class="fas fa-clock"></i></div><div class="label">My Pending Requests</div><div class="value">${state.withdrawalRequests.filter(r => r.memberId === state.currentUser.memberId && r.status === 'Pending').length}</div></div>
+                `;
+            }
+        }
+
+        function renderChart() {
+            if (financeChart) financeChart.destroy();
+            financeChart = new Chart(document.getElementById('financeChart').getContext('2d'), {
+                type: 'bar', data: { labels: ['Total Member Equity', 'Outstanding Loans'], datasets: [{ data: [state.members.reduce((s, m) => s + m.savings + m.share, 0), state.loans.filter(l => l.status === 'Active').reduce((s, l) => s + l.balance, 0)], backgroundColor: ['rgba(37, 99, 235, 0.8)', 'rgba(5, 150, 105, 0.8)'], borderRadius: 8, barThickness: 60 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        function renderMemberChart() {
+            if (memberFinanceChart) memberFinanceChart.destroy();
+            const myMember = state.members.find(m => m.id === state.currentUser.memberId);
+            if (!myMember) return;
+            memberFinanceChart = new Chart(document.getElementById('memberFinanceChart').getContext('2d'), {
+                type: 'line', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], datasets: [{ label: 'Savings Growth', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((_, i) => myMember.share + (myMember.savings * ((i + 1) / 6))), borderColor: '#059669', backgroundColor: 'rgba(5, 150, 105, 0.1)', fill: true, tension: 0.4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        function renderTables() {
+            const role = state.currentUser.role;
+            const isAdmin = role === 'admin';
+            const isPrivileged = isAdmin || role === 'treasurer';
+            const myMemberId = state.currentUser.memberId;
+
+            let headHtml = `<tr><th>Name</th><th>Username</th><th>Phone</th><th>Join Date</th>${isPrivileged ? '<th>Share Capital</th><th>Savings</th><th>Total Equity</th><th>Action</th>' : ''}</tr>`;
+            document.getElementById('directoryTableHead').innerHTML = headHtml;
+            document.getElementById('directoryTableBody').innerHTML = state.members.map(m => {
+                const u = state.users.find(user => user.memberId === m.id);
+                let financeCols = isPrivileged ? `<td>${Utils.formatCurrency(m.share)}</td><td>${Utils.formatCurrency(m.savings)}</td><td style="font-weight:800; color: var(--primary);">${Utils.formatCurrency(m.share + m.savings)}</td>` : '';
+                const safeName = m.name.replace(/'/g, "\\'");
+                let deleteBtn = (isAdmin && m.id !== myMemberId) ? `<td><button class="delete-btn" onclick="deleteMember('${m.id}', '${safeName}')"><i class="fas fa-trash"></i> Delete</button></td>` : '<td>-</td>';
+                return `<tr><td style="font-weight: 600;">${m.name}</td><td>${u ? u.username : 'N/A'}</td><td>${m.phone}</td><td>${Utils.formatDate(m.joined)}</td>${financeCols}${deleteBtn}</tr>`;
+            }).join('');
+
+            const myReqs = isPrivileged ? state.withdrawalRequests : state.withdrawalRequests.filter(r => r.memberId === myMemberId);
+            document.getElementById('withdrawalTableBody').innerHTML = myReqs.slice().reverse().map(r => {
+                let action = '';
+                let statusClass = r.status.toLowerCase().replace('awaiting_confirmation', 'awaiting').replace('completed', 'completed');
+                if (r.status === 'Pending') {
+                    if (isPrivileged) action = `<button class="success-btn" onclick="approveWithdrawal('${r.id}')">Approve</button> <button class="danger-btn" onclick="rejectWithdrawal('${r.id}')">Reject</button>`;
+                    else action = `<span style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">Awaiting Treasurer</span>`;
+                } else if (r.status === 'Awaiting_Confirmation') {
+                    if (isPrivileged) action = `<span style="font-size:0.8rem; color:var(--primary); font-weight:600;">Approved - Awaiting Member</span>`;
+                    else action = `<button class="primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="confirmWithdrawalCollection('${r.id}')"><i class="fas fa-check"></i> Confirm & Collect</button>`;
+                } else {
+                    action = `<span class="status-${statusClass}">${r.status === 'Awaiting_Confirmation' ? 'Approved (Pending Collection)' : r.status}</span>`;
+                }
+                return `<tr><td><span style="font-family: monospace; font-weight: 600;">${r.id}</span></td><td>${Utils.formatDate(r.date)}</td><td style="font-weight: 600;">${r.memberName}</td><td style="font-weight:700;">${Utils.formatCurrency(r.amount)}</td><td style="color: var(--text-secondary); font-size: 0.85rem;">${r.note}</td><td><span class="status-${statusClass}">${r.status === 'Awaiting_Confirmation' ? 'Awaiting Confirmation' : r.status}</span></td><td>${action}</td></tr>`;
+            }).join('') || '<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--text-muted);">No withdrawal requests.</td></tr>';
+
+            const myTx = state.transactions.filter(tx => isPrivileged || tx.memberId === myMemberId).slice(-20).reverse();
+            document.getElementById('savingsTableBody').innerHTML = myTx.map(tx => `
+                <tr><td>${Utils.formatDate(tx.date)}</td><td>${tx.member}</td>
+                <td><span style="color: ${tx.type.includes('Deposit') || tx.type.includes('Capital') ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${tx.type}</span></td>
+                <td>${Utils.formatCurrency(tx.amount)}</td><td>${tx.note}</td>
+                <td><button class="secondary" style="padding: 4px 8px; font-size: 0.8rem;" onclick='showReceipt(${JSON.stringify(tx).replace(/'/g, "&#39;")})'><i class="fas fa-receipt"></i></button></td></tr>
+            `).join('') || '<tr><td colspan="6" style="text-align:center; padding: 2rem; color: var(--text-muted);">No transactions.</td></tr>';
+
+            const myLoans = state.loans.filter(l => isPrivileged || l.memberId === myMemberId);
+            document.getElementById('loanTableBody').innerHTML = myLoans.map(l => {
+                let action = l.status === 'Pending' && isAdmin ? `<button class="success-btn" onclick="approveLoan('${l.id}')">Approve</button> <button class="danger-btn" onclick="rejectLoan('${l.id}')">Reject</button>` : `<span class="status-${l.status.toLowerCase()}">${l.status}</span>`;
+                return `<tr><td>${l.id}</td><td>${l.memberName}</td><td>${Utils.formatCurrency(l.amount)}</td><td>${l.rate}%</td><td>${l.term} mo</td><td style="font-weight:700;">${Utils.formatCurrency(l.balance)}</td><td><span class="status-${l.status.toLowerCase()}">${l.status}</span></td><td>${action}</td></tr>`;
+            }).join('') || '<tr><td colspan="8" style="text-align:center; padding: 2rem; color: var(--text-muted);">No loans.</td></tr>';
+
+            if (isAdmin) {
+                document.getElementById('logsTableBody').innerHTML = state.logs.map(log => `<tr><td style="font-size: 0.8rem; color: var(--text-muted);">${log.timestamp}</td><td><span class="role-badge admin">${log.user}</span></td><td>${log.action}</td><td>${log.details}</td></tr>`).join('');
+            }
+        }
+
+        function populateDropdowns() {
+            if (!state.currentUser) return;
+            const isPrivileged = state.currentUser.role === 'admin' || state.currentUser.role === 'treasurer';
+            if (isPrivileged) {
+                const savingsSelect = document.getElementById('savingsMember');
+                if (savingsSelect && savingsSelect.tagName === 'SELECT' && !savingsSelect.disabled) {
+                    savingsSelect.innerHTML = '<option value="">Select Member</option>' + state.members.map(m => `<option value="${m.id}">${m.name} (${m.id})</option>`).join('');
+                    savingsSelect.selectedIndex = 0;
+                }
+                const loanSelect = document.getElementById('loanMember');
+                if (loanSelect && loanSelect.tagName === 'SELECT' && !loanSelect.disabled) {
+                    loanSelect.innerHTML = '<option value="">Select Member</option>' + state.members.map(m => `<option value="${m.id}">${m.name} (${m.id})</option>`).join('');
+                    loanSelect.selectedIndex = 0;
+                }
+                const repaymentSelect = document.getElementById('repaymentLoan');
+                if (repaymentSelect && repaymentSelect.tagName === 'SELECT') {
+                    repaymentSelect.innerHTML = '<option value="">Select Active Loan</option>' + state.loans.filter(l => l.status === 'Active').map(l => `<option value="${l.id}">${l.id} - ${l.memberName}</option>`).join('');
+                    repaymentSelect.selectedIndex = 0;
+                }
+            }
+        }
+
+        window.showLoanDenialModal = function(memberName, currentEquity, customReason) {
+            document.getElementById('denialMemberName').textContent = memberName;
+            document.getElementById('denialCurrentEquity').textContent = Utils.formatCurrency(currentEquity);
+            document.getElementById('denialReasonText').textContent = customReason || `Your total equity is currently ${Utils.formatCurrency(currentEquity)}, which is below the minimum threshold of UGX 50,000 required to qualify for a loan.`;
+            document.getElementById('loanDenialModal').classList.add('active');
+        };
+        window.closeLoanDenialModal = function() { document.getElementById('loanDenialModal').classList.remove('active'); };
+
+        window.deleteMember = async function(memberId, memberName) {
+            const confirmed = await Utils.confirm(`Are you absolutely sure you want to permanently delete <strong>${memberName}</strong>?<br><br>This will remove their account and all associated data. This CANNOT be undone.`, 'Delete Member Account');
+            if (confirmed) {
+                try {
+                    const res = await fetch(`${API_URL}/members/${memberId}`, { method: 'DELETE' });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || 'Delete failed');
+                    await fetchData();
+                    Utils.toast(`${memberName} has been permanently removed.`, 'success');
+                } catch (err) { Utils.toast('Failed to delete member: ' + err.message, 'error'); }
+            }
+        };
+
+        window.approveWithdrawal = async function(reqId) {
+            const req = state.withdrawalRequests.find(r => r.id === reqId);
+            const member = state.members.find(m => m.id === req.memberId);
+            if (member && member.savings >= req.amount && await Utils.confirm(`Approve ${Utils.formatCurrency(req.amount)} for ${req.memberName}?`)) {
+                await fetch(`${API_URL}/withdrawals/${reqId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'Awaiting_Confirmation', deductFunds: false, actorName: state.currentUser.name }) });
+                await fetchData(); 
+                Utils.toast('Withdrawal approved. Member must confirm collection.', 'success');
+            } else { Utils.toast('Error: Member has insufficient funds.', 'error'); }
+        };
+
+        window.confirmWithdrawalCollection = async function(reqId) {
+            const req = state.withdrawalRequests.find(r => r.id === reqId);
+            if (req && req.status === 'Awaiting_Confirmation') {
+                const member = state.members.find(m => m.id === req.memberId);
+                if (member && member.savings >= req.amount && await Utils.confirm(`Confirm collection of ${Utils.formatCurrency(req.amount)}?`)) {
+                    await fetch(`${API_URL}/withdrawals/${reqId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'Completed', deductFunds: true, actorName: state.currentUser.name }) });
+                    await fetchData();
+                    showReceipt({ id: 'NEW', date: new Date().toISOString().split('T')[0], member: req.memberName, type: 'Withdraw', amount: req.amount, note: req.note });
+                    Utils.toast('Funds collected successfully!', 'success');
+                } else { Utils.toast('Error: Insufficient funds.', 'error'); }
+            }
+        };
+
+        window.rejectWithdrawal = async function(reqId) {
+            if (await Utils.confirm('Reject this withdrawal request?')) {
+                await fetch(`${API_URL}/withdrawals/${reqId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'Rejected', deductFunds: false, actorName: state.currentUser.name }) });
+                await fetchData(); Utils.toast('Request rejected.', 'warning');
+            }
+        };
+
+        window.approveLoan = async function(id) {
+            if (await Utils.confirm(`Approve loan ${id}?`)) {
+                await fetch(`${API_URL}/loans/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'Active', actorName: state.currentUser.name }) });
+                await fetchData(); Utils.toast('Loan approved.', 'success');
+            }
+        };
+
+        window.rejectLoan = async function(id) {
+            if (await Utils.confirm('Reject loan?')) {
+                await fetch(`${API_URL}/loans/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'Rejected', actorName: state.currentUser.name }) });
+                await fetchData(); Utils.toast('Loan rejected.', 'warning');
+            }
+        };
+
+        window.showReceipt = function(tx) {
+            currentReceiptData = tx;
+            document.getElementById('receiptContent').innerHTML = `
+                <div style="text-align: center; margin-bottom: 1.25rem; border-bottom: 1px dashed #000; padding-bottom: 0.85rem;">
+                    <strong style="font-size: 1.1rem; color: #000;">BRIDGE MICRO SAVING GROUP</strong><br>
+                    <span style="font-size: 0.75rem; color: #555;">Official POS Receipt</span>
+                </div>
+                <div class="receipt-row"><span>Receipt ID:</span> <span style="font-weight: 600;">${tx.id || 'N/A'}</span></div>
+                <div class="receipt-row"><span>Date:</span> <span style="font-weight: 600;">${Utils.formatDate(tx.date)}</span></div>
+                <div class="receipt-row"><span>Member:</span> <span style="font-weight: 600;">${tx.member}</span></div>
+                <div class="receipt-row"><span>Type:</span> <span style="font-weight: 600;">${tx.type}</span></div>
+                <div class="receipt-row receipt-total"><span>TOTAL:</span> <span>${Utils.formatCurrency(tx.amount)}</span></div>
+            `;
+            document.getElementById('receiptModal').classList.add('active');
+        };
+
+        window.printReceipt = function() { window.print(); };
+        window.downloadReceipt = function() {
+            if (!currentReceiptData) return;
+            const tx = currentReceiptData;
+            const text = `BRIDGE MICRO SAVING GROUP - OFFICIAL RECEIPT\n----------------------------------------\nReceipt ID: ${tx.id || 'N/A'}\nDate: ${Utils.formatDate(tx.date)}\nMember: ${tx.member}\nType: ${tx.type}\n----------------------------------------\nTOTAL: ${Utils.formatCurrency(tx.amount)}\n----------------------------------------\nProduct of Uma-Tech Solutions`;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const a = document.createElement('a'); a.href = window.URL.createObjectURL(blob); a.download = `Receipt_${tx.id || 'Transaction'}.txt`; a.click();
+            Utils.toast('Receipt downloaded successfully!', 'success');
+        };
+
+        window.closeReceipt = () => { document.getElementById('receiptModal').classList.remove('active'); currentReceiptData = null; };
+        window.closeConfirm = () => document.getElementById('confirmModal').classList.remove('active');
+        window.closeCredentialsModal = () => document.getElementById('credentialsModal').classList.remove('active');
+        
+        window.showCredentialsModal = (username, password, name) => {
+            document.getElementById('credUsername').textContent = username;
+            document.getElementById('credPassword').textContent = password;
+            document.getElementById('credName').textContent = name;
+            document.getElementById('credentialsModal').classList.add('active');
+        };
+
+        window.copyCredentials = function() {
+            const user = document.getElementById('credUsername').textContent;
+            const pass = document.getElementById('credPassword').textContent;
+            const text = `Bridge Micro Saving Group Credentials\nUsername: ${user}\nPassword: ${pass}`;
+            navigator.clipboard.writeText(text).then(() => Utils.toast('Credentials copied to clipboard!', 'success')).catch(() => Utils.toast('Failed to copy. Please copy manually.', 'error'));
+        };
+
+        window.exportToCSV = function(type) {
+            const myTx = (state.currentUser.role !== 'member') ? state.transactions : state.transactions.filter(t => t.memberId === state.currentUser.memberId);
+            let data = myTx.map(t => `${t.date},"${t.member}",${t.type},${t.amount},"${t.note}"`);
+            data.unshift('Date,Member,Type,Amount,Note');
+            const blob = new Blob([data.join('\n')], { type: 'text/csv' });
+            const a = document.createElement('a'); a.href = window.URL.createObjectURL(blob); a.download = 'bridge_saving_transactions.csv'; a.click();
+            Utils.toast('Export downloaded.', 'success');
+        };
+
+        function setupMobileMenu() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('appSidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            menuBtn.onclick = () => { sidebar.classList.add('open'); backdrop.classList.add('active'); };
+            backdrop.onclick = () => { sidebar.classList.remove('open'); backdrop.classList.remove('active'); };
+        }
+    </script>
+</body>
+</html>
