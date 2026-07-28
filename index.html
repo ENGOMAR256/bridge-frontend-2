@@ -33,7 +33,7 @@
         ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; opacity: 0.5; }
 
         #globalFooter { text-align: center; padding: 1.25rem; color: var(--text-muted); font-size: 0.8rem; background: var(--surface); border-top: 1px solid var(--border); margin-top: auto; position: relative; z-index: 10; }
-        #globalFooter .uma-tech { font-weight: 700; color: var(--primary); letter-spacing: 0.5px; }
+        #globalFooter .uma-tech { font-weight: 700; color: var(--primary); letter-spacing: 0.5px; font-size: 0.9rem; }
 
         #loginScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; overflow: hidden; }
         #loginScreen::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%); }
@@ -484,7 +484,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://bridge-backend-2-ycom.onrender.com/api'; // UPDATE THIS TO YOUR RENDER URL
+        const API_URL = 'https://bridge-backend-2-ycom.onrender.com/api'; 
         let currentReceiptData = null;
 
         const Utils = {
@@ -516,9 +516,10 @@
         let state = { users: [], members: [], transactions: [], loans: [], withdrawalRequests: [], logs: [], currentUser: null, theme: 'light' };
         let financeChart = null, memberFinanceChart = null;
 
-        // FIXED: Setup forms and navigation ONCE on load, not on every login
         document.addEventListener('DOMContentLoaded', () => {
-            applyTheme(); setupLogin(); setupMobileMenu(); setupForms(); setupNavigation();
+            applyTheme(); 
+            setupLogin(); 
+            setupMobileMenu(); 
         });
 
         async function fetchData() {
@@ -531,7 +532,7 @@
         }
 
         function setupLogin() {
-            // FIXED: Changed to .onsubmit to prevent stacking event listeners
+            // FIXED: Using .onsubmit prevents stacking listeners on multiple logins
             document.getElementById('loginForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const btn = e.target.querySelector('button');
@@ -554,7 +555,10 @@
                         state.currentUser = data.user;
                         document.getElementById('loginScreen').style.display = 'none';
                         document.getElementById('appContainer').style.display = 'flex';
-                        updateHeaderDisplay(); applyRoleBasedUI(); 
+                        updateHeaderDisplay(); 
+                        applyRoleBasedUI(); 
+                        setupNavigation(); // Setup nav once per login
+                        setupForms();      // Setup forms once per login
                         await fetchData();
                         setTimeout(() => {
                             renderDashboard();
@@ -594,7 +598,7 @@
         async function confirmResetWithPin() {
             const pin = document.getElementById('resetPin').value;
             if (pin !== '9999') { Utils.toast('Incorrect Security PIN!', 'error'); document.getElementById('resetPin').value = ''; return; }
-            const confirmed = await Utils.confirm('⚠️ This will permanently wipe ALL transactions, loans, and withdrawal requests.<br><br><strong>All user accounts will be preserved.</strong>', 'Smart System Reset');
+            const confirmed = await Utils.confirm('️ This will permanently wipe ALL transactions, loans, and withdrawal requests.<br><br><strong>All user accounts will be preserved.</strong>', 'Smart System Reset');
             if (confirmed) {
                 try {
                     const res = await fetch(`${API_URL}/reset`, { method: 'POST' });
@@ -647,7 +651,7 @@
         }
 
         function setupNavigation() {
-            // FIXED: Changed to .onclick to prevent stacking
+            // FIXED: Using .onclick prevents stacking listeners
             document.querySelectorAll('.sidebar button[data-page]').forEach(btn => {
                 btn.onclick = async () => {
                     document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active'));
@@ -1081,8 +1085,16 @@
                 if (member && member.savings >= req.amount && await Utils.confirm(`Confirm collection of ${Utils.formatCurrency(req.amount)}?`)) {
                     await fetch(`${API_URL}/withdrawals/${reqId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'Completed', deductFunds: true, actorName: state.currentUser.name }) });
                     await fetchData();
-                    showReceipt({ id: 'NEW', date: new Date().toISOString().split('T')[0], member: req.memberName, type: 'Withdraw', amount: req.amount, note: req.note });
-                    Utils.toast('Funds collected successfully!', 'success');
+                    // FIXED: Show receipt immediately after member confirms collection
+                    showReceipt({ 
+                        id: 'W-' + reqId, 
+                        date: new Date().toISOString().split('T')[0], 
+                        member: req.memberName, 
+                        type: 'Withdrawal Collection', 
+                        amount: req.amount, 
+                        note: req.note + ' (Collected)' 
+                    });
+                    Utils.toast('Funds collected successfully! Receipt generated.', 'success');
                 } else { Utils.toast('Error: Insufficient funds.', 'error'); }
             }
         };
